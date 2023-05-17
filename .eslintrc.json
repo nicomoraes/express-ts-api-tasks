@@ -1,0 +1,48 @@
+{
+  "env": {
+    "es2021": true,
+    "node": true
+  },
+  "extends": "standard-with-typescript",
+  "plugins": [
+    "eslint-plugin-import-helpers"
+  ],
+  "overrides": [],
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "rules": {
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-misused-promises": "off",
+    "@typescript-eslint/strict-boolean-expressions": "off",
+    "@typescript-eslint/semi": "off",
+    "@typescript-eslint/return-await": "off",
+    "semi": "off",
+    "import-helpers/order-imports": [
+      "warn",
+      {
+        "newlinesBetween": "always",
+        "groups": [
+          "module",
+          [
+            "parent",
+            "sibling",
+            "index"
+          ],
+          "/^@type/",
+          "/^@middlewares/",
+          "/^@helpers/",
+          "/^@config/",
+          "/^@api/"
+        ],
+        "alphabetize": {
+          "order": "asc",
+          "ignoreCase": true
+        }
+      }
+    ]
+  }
+}

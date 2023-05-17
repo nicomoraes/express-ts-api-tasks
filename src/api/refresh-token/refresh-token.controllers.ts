@@ -1,15 +1,17 @@
-import { Response } from "express";
-import { RefreshToken } from "./refresh-token.model";
-import { TypedRequestBody } from "../../types/request";
-import * as service from "./refresh-token.services";
+import { type Response } from 'express';
 
-export async function refresh(
+import { type RefreshToken } from './refresh-token.model';
+import * as service from './refresh-token.services';
+
+import { type TypedRequestBody } from '@type/request';
+
+export async function refresh (
   req: TypedRequestBody<RefreshToken>,
   res: Response
 ) {
-  const refresh_token = req.body;
+  const refreshToken = req.body;
 
-  const token = service.createTokenByRefreshToken(refresh_token.id);
+  const token = service.createTokenByRefreshToken(refreshToken.id);
 
   return res.status(200).json({ token });
 }

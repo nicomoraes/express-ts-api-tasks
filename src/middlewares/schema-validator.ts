@@ -1,10 +1,9 @@
-import { Request, Response, NextFunction } from "express";
-import { SchemaValidationError } from "../helpers/api-errors";
-import { UserAuthSchema } from "../api/users/user.model";
-import {
-  TaskCreateSchema,
-  TaskOnlyUserIdSchema,
-} from "../api/tasks/task.model";
+import { type Request, type Response, type NextFunction } from 'express';
+
+import { SchemaValidationError } from '@helpers/api-errors';
+
+import { TaskCreateSchema } from '@api/tasks/task.model';
+import { UserAuthSchema } from '@api/users/user.model';
 
 export const authValidator = async (
   req: Request,
@@ -13,7 +12,7 @@ export const authValidator = async (
 ) => {
   const validationResult = UserAuthSchema.safeParse(req.body);
 
-  if (validationResult.success === false) {
+  if (!validationResult.success) {
     const issues = validationResult.error.issues;
 
     const schemaErrors = issues.map((issue) => {
@@ -21,11 +20,11 @@ export const authValidator = async (
     }) as unknown as typeof SchemaValidationError.prototype.schemaError;
 
     throw new SchemaValidationError(
-      "Erro na validação de campos",
+      'Erro na validação de campos',
       schemaErrors
     );
   } else {
-    return next();
+    next();
   }
 };
 
@@ -36,7 +35,7 @@ export const createTaskValidator = async (
 ) => {
   const validationResult = TaskCreateSchema.safeParse(req.body);
 
-  if (validationResult.success === false) {
+  if (!validationResult.success) {
     const issues = validationResult.error.issues;
 
     const schemaErrors = issues.map((issue) => {
@@ -44,10 +43,10 @@ export const createTaskValidator = async (
     }) as unknown as typeof SchemaValidationError.prototype.schemaError;
 
     throw new SchemaValidationError(
-      "Erro na validação de campos",
+      'Erro na validação de campos',
       schemaErrors
     );
   } else {
-    return next();
+    next();
   }
 };

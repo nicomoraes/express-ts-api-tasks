@@ -1,47 +1,48 @@
-import type { TaskCreate, TaskByUserId, TaskById } from "./task.model";
-import { prisma } from "../../config/prisma-client";
+import type { TaskCreate, TaskByUserId, TaskById } from './task.model';
+
+import { prisma } from '@config/prisma-client';
 
 const create = async ({ title, description, userId }: TaskCreate) => {
-  const task = prisma.task.create({
+  const task = await prisma.task.create({
     data: {
       title,
       description,
       user: {
         connect: {
-          id: userId,
-        },
-      },
-    },
+          id: userId
+        }
+      }
+    }
   });
 
   return task;
 };
 
 const get = async ({ id }: TaskById) => {
-  const task = prisma.task.findUnique({
+  const task = await prisma.task.findUnique({
     where: {
-      id,
-    },
+      id
+    }
   });
 
   return task;
 };
 
 const getAll = async ({ userId }: TaskByUserId) => {
-  const tasks = prisma.task.findMany({
+  const tasks = await prisma.task.findMany({
     where: {
-      userId,
-    },
+      userId
+    }
   });
 
   return tasks;
 };
 
 const remove = async ({ id }: TaskById) => {
-  const task = prisma.task.delete({
+  const task = await prisma.task.delete({
     where: {
-      id,
-    },
+      id
+    }
   });
 
   return task;

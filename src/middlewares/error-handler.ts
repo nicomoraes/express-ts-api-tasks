@@ -1,24 +1,25 @@
-import { Request, Response, NextFunction } from "express";
-import { type ApiError, SchemaValidationError } from "../helpers/api-errors";
+import { type Request, type Response, type NextFunction } from 'express'
+
+import { type ApiError, type SchemaValidationError } from '@helpers/api-errors'
 
 const errorHandler = (
   error: Error & ApiError & Partial<SchemaValidationError>,
-  req: Request,
+  _req: Request,
   res: Response,
   _next: NextFunction
 ) => {
   const schemaError = error.schemaError ?? null;
   const code = error.statusCode ?? 500;
-  const message = error.statusCode ? error.message : "Erro interno do servidor";
+  const message = (error.statusCode !== 0) ? error.message : 'Erro interno do servidor';
 
-  const json: { message: string; errors?: typeof schemaError; code: number } = {
+  const json: { message: string, errors?: typeof schemaError, code: number } = {
     message,
-    code,
+    code
   };
 
-  !!schemaError && (json.errors = schemaError);
+  !(schemaError == null) && (json.errors = schemaError);
 
   return res.status(code).json({ ...json });
-};
+}
 
 export default errorHandler;
