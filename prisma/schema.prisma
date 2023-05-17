@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String        @id @default(uuid())
+  username      String        @unique
+  password      String
+  tasks         Task[]
+  refresh_token RefreshToken?
+
+  @@map("users")
+}
+
+model Task {
+  id          String  @id @default(uuid())
+  title       String  @unique
+  description String?
+  user        User    @relation(fields: [userId], references: [id])
+  userId      String
+
+  @@map("tasks")
+}
+
+model RefreshToken {
+  id        String @id @default(uuid())
+  expiresIn Int
+  user      User   @relation(fields: [userId], references: [id])
+  userId    String @unique
+
+  @@map("refresh_token")
+}
