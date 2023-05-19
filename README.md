@@ -1,7 +1,7 @@
 
-# Express API | Node.js + TypeScript
+# Express API | Node.js + TypeScript + Express.js
 
-API simples que possibilita a criação e autenticação  de usuário e CRUD de tarefas.
+API simples que possibilita a criação e autenticação de usuário e CRUD de tarefas.
 
 
 
@@ -116,6 +116,7 @@ Realiza o login do usuário.
     -   Código: 401 (Unauthorized)
         -   Descrição: Nome de usuário ou senha incorreta.## Dependências
 
+---
 O projeto depende das seguintes bibliotecas:
 
 -   `@prisma/client`: Cliente do Prisma para interagir com o banco de dados.
@@ -136,6 +137,7 @@ O projeto depende das seguintes bibliotecas:
 -   `tsx`: Script auxiliar para execução do TypeScript.
 -   `typescript`: Linguagem de programação TypeScript.
 
+---
 ## Variáveis de Ambiente
 
 Para rodar esse projeto, você vai precisar adicionar as seguintes variáveis de ambiente no seu .env
@@ -150,7 +152,7 @@ Para rodar esse projeto, você vai precisar adicionar as seguintes variáveis de
 
 `DATABASE_URL`
 
-
+---
 ## Rodando localmente
 
 Certifique-se de ter o Node.js e o TypeScript instalados em sua máquina.
