@@ -1,13 +1,13 @@
 import { Router } from 'express';
 
 import * as controllers from './user.controllers';
+import { UserAuthSchema } from './user.model';
 
-import { authValidator } from '@middlewares/schema-validator';
+import { validateBody } from '@middlewares/schema-validator';
 
 const router = Router();
 
-router.post('/create', authValidator, controllers.create);
-
-router.post('/login', authValidator, controllers.login);
+router.post('/create', validateBody(UserAuthSchema), controllers.create);
+router.post('/login', validateBody(UserAuthSchema), controllers.login);
 
 export default router;

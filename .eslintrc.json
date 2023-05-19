@@ -15,6 +15,7 @@
   },
   "rules": {
     "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/naming-convention": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-misused-promises": "off",
     "@typescript-eslint/strict-boolean-expressions": "off",
@@ -32,7 +33,7 @@
             "sibling",
             "index"
           ],
-          "/^@type/",
+          "/^@interfaces/",
           "/^@middlewares/",
           "/^@helpers/",
           "/^@config/",

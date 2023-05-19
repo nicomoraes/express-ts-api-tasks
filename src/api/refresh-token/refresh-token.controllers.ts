@@ -1,17 +1,36 @@
+import dayjs from 'dayjs';
 import { type Response } from 'express';
 
 import { type RefreshToken } from './refresh-token.model';
 import * as service from './refresh-token.services';
 
-import { type TypedRequestBody } from '@type/request';
+import { type TypedRequestBody } from '@interfaces/request';
 
-export async function refresh (
+import { UnauthorizedError } from '@helpers/api-errors';
+import { jwtGenerator } from '@helpers/jwt-generator';
+
+export const refresh = async (
   req: TypedRequestBody<RefreshToken>,
   res: Response
-) {
-  const refreshToken = req.body;
+) => {
+  const storedRefreshToken = req.body;
 
-  const token = service.createTokenByRefreshToken(refreshToken.id);
+  const retrievedRefreshToken = await service.getById({ id: storedRefreshToken.id });
 
-  return res.status(200).json({ token });
+  if (retrievedRefreshToken === null) {
+    throw new UnauthorizedError('Refresh token inválido!');
+  }
+
+  const isRefreshTokenExpired = dayjs().isAfter(dayjs.unix(retrievedRefreshToken.expiresIn))
+
+  const accessToken = jwtGenerator(retrievedRefreshToken.userId);
+
+  if (isRefreshTokenExpired) {
+    await service.removeByUserId({ userId: storedRefreshToken.userId });
+    const newRefreshToken = await service.create({ userId: storedRefreshToken.userId });
+
+    return res.status(200).json({ accessToken, refreshToken: newRefreshToken });
+  }
+
+  return res.status(200).json({ accessToken });
 }

@@ -1,11 +1,10 @@
 import dayjs from 'dayjs';
 
-import { UnauthorizedError } from '@helpers/api-errors';
-import { jwtGenerator } from '@helpers/jwt-generator';
+import { type RefreshTokenByUserId, type RefreshTokenById } from './refresh-token.model';
 
 import { prisma } from '@config/prisma-client';
 
-const create = async (userId: string) => {
+const create = async ({ userId }: RefreshTokenByUserId) => {
   const expirationConfig = Number.parseInt(
     process.env.REFRESH_TOKEN_EXPIRES_IN!
   );
@@ -25,20 +24,24 @@ const create = async (userId: string) => {
   return token;
 };
 
-const createTokenByRefreshToken = async (refreshTokenId: string) => {
+const getById = async ({ id }: RefreshTokenById) => {
   const refreshToken = await prisma.refreshToken.findFirst({
     where: {
-      id: refreshTokenId
+      id
     }
   });
 
-  if (refreshToken === null) {
-    throw new UnauthorizedError('Refresh token inválido!');
-  }
-
-  const token = jwtGenerator(refreshToken.userId);
-
-  return { token };
+  return refreshToken
 };
 
-export { create, createTokenByRefreshToken };
+const removeByUserId = async ({ userId }: RefreshTokenByUserId) => {
+  const refreshToken = await prisma.refreshToken.deleteMany({
+    where: {
+      userId
+    }
+  });
+
+  return refreshToken
+};
+
+export { create, getById, removeByUserId };

@@ -10,7 +10,7 @@ export const UserSchema = z.object({
   username: z
     .string({
       required_error: 'O nome de usuário não pode estar vazio.',
-      invalid_type_error: 'O campo deve ser do tipo string'
+      invalid_type_error: 'O campo deve ser do tipo string.'
     })
     .min(USERNAME_MIN_LENGHT, {
       message: `O nome de usuário deve ter no mínimo ${USERNAME_MIN_LENGHT} caracteres.`
@@ -25,7 +25,7 @@ export const UserSchema = z.object({
   password: z
     .string({
       required_error: 'A senha não pode estar vazia.',
-      invalid_type_error: 'O campo deve ser do tipo string'
+      invalid_type_error: 'O campo deve ser do tipo string.'
     })
     .min(PASSWORD_MIN_LENGHT, {
       message: `A senha deve ter no mínimo ${PASSWORD_MIN_LENGHT} caracteres.`
@@ -37,8 +37,7 @@ export const UserSchema = z.object({
 
 export const UserAuthSchema = UserSchema.omit({ id: true });
 
+export type User = z.infer<typeof UserSchema>;
 export type UserAuthentication = z.infer<typeof UserAuthSchema>;
-
-// utils
-export type UserByUsername = Pick<z.infer<typeof UserSchema>, 'username'>;
-export type UserById = Pick<z.infer<typeof UserSchema>, 'id'>;
+export type UserByUsername = Pick<User, 'username'>;
+export type UserById = Pick<User, 'id'>;

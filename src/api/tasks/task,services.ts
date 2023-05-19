@@ -1,12 +1,11 @@
-import type { TaskCreate, TaskByUserId, TaskById } from './task.model';
+import type { TaskCreate, TaskByUserId, TaskById, TaskUpdate } from './task.model';
 
 import { prisma } from '@config/prisma-client';
 
-const create = async ({ title, description, userId }: TaskCreate) => {
+const create = async ({ userId, ...data }: TaskCreate) => {
   const task = await prisma.task.create({
     data: {
-      title,
-      description,
+      ...data,
       user: {
         connect: {
           id: userId
@@ -38,6 +37,20 @@ const getAll = async ({ userId }: TaskByUserId) => {
   return tasks;
 };
 
+const update = async ({ id, ...data }: Partial<TaskUpdate> & TaskById) => {
+  const tasks = await prisma.task.update({
+    where: {
+      id
+    },
+    data: {
+      ...data,
+      updated_at: new Date()
+    }
+  });
+
+  return tasks;
+};
+
 const remove = async ({ id }: TaskById) => {
   const task = await prisma.task.delete({
     where: {
@@ -48,4 +61,4 @@ const remove = async ({ id }: TaskById) => {
   return task;
 };
 
-export { create, getAll, get, remove };
+export { create, getAll, get, update, remove };

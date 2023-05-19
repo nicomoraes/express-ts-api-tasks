@@ -1,52 +1,26 @@
-import { type Request, type Response, type NextFunction } from 'express';
+import { type Request, type Response, type NextFunction } from 'express'
+import { type AnyZodObject } from 'zod';
 
 import { SchemaValidationError } from '@helpers/api-errors';
 
-import { TaskCreateSchema } from '@api/tasks/task.model';
-import { UserAuthSchema } from '@api/users/user.model';
+const validateBody = (schema: AnyZodObject) =>
+  async (req: Request, _res: Response, next: NextFunction) => {
+    const validationResult = schema.safeParse(req.body);
 
-export const authValidator = async (
-  req: Request,
-  _res: Response,
-  next: NextFunction
-) => {
-  const validationResult = UserAuthSchema.safeParse(req.body);
+    if (!validationResult.success) {
+      const issues = validationResult.error.issues;
 
-  if (!validationResult.success) {
-    const issues = validationResult.error.issues;
+      const schemaErrors = issues.map((issue) => {
+        return { field: issue.path[0], message: issue.message };
+      }) as unknown as typeof SchemaValidationError.prototype.schemaError;
 
-    const schemaErrors = issues.map((issue) => {
-      return { field: issue.path[0], message: issue.message };
-    }) as unknown as typeof SchemaValidationError.prototype.schemaError;
+      throw new SchemaValidationError(
+        'Erro na validação de campos',
+        schemaErrors
+      );
+    } else {
+      next();
+    }
+  };
 
-    throw new SchemaValidationError(
-      'Erro na validação de campos',
-      schemaErrors
-    );
-  } else {
-    next();
-  }
-};
-
-export const createTaskValidator = async (
-  req: Request,
-  _res: Response,
-  next: NextFunction
-) => {
-  const validationResult = TaskCreateSchema.safeParse(req.body);
-
-  if (!validationResult.success) {
-    const issues = validationResult.error.issues;
-
-    const schemaErrors = issues.map((issue) => {
-      return { field: issue.path[0], message: issue.message };
-    }) as unknown as typeof SchemaValidationError.prototype.schemaError;
-
-    throw new SchemaValidationError(
-      'Erro na validação de campos',
-      schemaErrors
-    );
-  } else {
-    next();
-  }
-};
+export { validateBody }

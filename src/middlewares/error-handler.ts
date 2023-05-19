@@ -17,7 +17,7 @@ const errorHandler = (
     code
   };
 
-  !(schemaError == null) && (json.errors = schemaError);
+  !(schemaError === null) && (json.errors = schemaError);
 
   return res.status(code).json({ ...json });
 }
